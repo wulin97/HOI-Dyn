@@ -6,4 +6,5 @@ Generating realistic 3D human-object interactions (HOIs) remains a challenging t
 To further enforce consistency, we introduce a residual-based dynamics loss that mitigates the impact of dynamics prediction errors and prevents misleading optimization signals. The dynamics model is used only during training, preserving inference efficiency. 
 Through extensive qualitative and quantitative experiments, we demonstrate that our approach not only enhances the quality of HOI generation but also establishes a feasible metric for evaluating the quality of generated interactions.
 
-> Code will be release soon
+
+> This code is based on [CHOIS (ECCV 2024)](https://github.com/lijiaman/chois_release).

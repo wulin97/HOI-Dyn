@@ -1,0 +1,25 @@
+seed: 42
+epochs: 200
+train_batch_size: 32
+val_batch_size: 32
+test_batch_size: 1
+name: S2_D4_F64_H8
+mode: test
+save_dir: runs
+use_tb: false
+resume: true
+ckpt: /runs/S2_D4_F64_H8/best.pth
+gpu: 0
+
+
+lr: 1e-3
+T0: 10
+T_mult: 2
+eta_min: 1e-5
+
+
+model:
+  depth: 4
+  feat_dim: 64
+  head: 8
+  max_step: 2
