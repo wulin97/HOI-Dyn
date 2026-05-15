@@ -1,0 +1,98 @@
+# =========================
+# Runtime / training config
+# =========================
+
+epochs: 200
+train_batch_size: 32
+val_batch_size: 32
+test_batch_size: 1
+
+# Experiment name; used as save folder name under save_dir
+name: S2_D4_F64_H8_HW1_CSplit
+
+# Options:
+#   train-val-test
+#   test
+#   val
+#   test_ar
+mode: train-val-test
+
+save_dir: YOUR FOULDER
+use_tb: true
+
+# Resume/load checkpoint
+resume: false
+ckpt:
+
+gpu: 0
+
+# Optimizer / scheduler
+lr: 1e-3
+T0: 10
+T_mult: 2
+eta_min: 1e-5
+
+# =========================
+# Model / loss config
+# =========================
+
+model:
+  # -------------------------
+  # Dynamics model structure
+  # -------------------------
+  # Number of historical object states used as condition.
+  # H=1: only O_t
+  # H=2: O_{t-1}, O_t
+  # H=3: O_{t-2}, O_{t-1}, O_t
+  history_win: 1
+
+  # Clean version only predicts one future target frame.
+  # The target frame is controlled by max_step.
+  future_win: 1
+
+  # Prediction stride S.
+  # The model predicts delta object motion from anchor t to target t+S.
+  # For training/validation/testing, this is passed to get_advanced_timespan.
+  max_step: 2
+
+  # MiniTransformer architecture
+  depth: 4
+  feat_dim: 64
+  head: 8
+
+  # Output dimensions
+  out_trans_dim: 3
+  out_rot_dim: 9
+
+  # Rotation loss / output interpretation.
+  # theta: network outputs 9D, projected to SO(3), optimized by geodesic angle.
+  # fro:   direct Frobenius loss on 3x3 rotation-like matrix.
+  rot_loss_method: theta
+
+  # -------------------------
+  # Loss behavior
+  # -------------------------
+
+  # If true, the network output is interpreted as object delta motion:
+  #   pred O_{t+S} = O_t + Delta O
+  # For theta rotation:
+  #   pred R_{t+S} = R_t @ Delta R
+  use_delta_motion: true
+
+  # Reserved interface
+  # Clean version should keep this false.
+  use_higher_order: false
+
+  # Split dynamics loss into contact and no-contact subsets for monitoring:
+  #   contact_*_loss
+  #   no_contact_*_loss
+  # This does not change the training objective unless trainer explicitly uses these terms.
+  use_contact_split_loss: false
+
+  # Optional zero-motion-style static object monitor/regularizer.
+  # Recommended false for clean experiments.
+  use_static_object_loss: false
+
+  # Only used when use_static_object_loss=true.
+  # static = no human contact + object on floor.
+  use_floor_contact_for_static: false
